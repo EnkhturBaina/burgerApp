@@ -1,6 +1,6 @@
 import css from "./style.module.css";
 
 const HamburgerMenu = () => {
-  return <div>HamburgerMenu</div>;
+  return <div className={css.HamburgerMenu}>HamburgerMenu</div>;
 };
 export default HamburgerMenu;

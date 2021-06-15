@@ -6,30 +6,26 @@ import css from "./style.module.css";
 class BurgerBuilder extends Component {
   state = {
     ingredients: {
-      bacon: 1,
-      salad: 1,
-      meat: 2,
-      cheese: 1,
+      bacon: 0,
+      salad: 0,
+      meat: 0,
+      cheese: 0,
     },
-    data: 2,
   };
 
   ortsNemeh = (e) => {
-    const obj = { ...this.state.ingredients };
+    var obj = { ...this.state.ingredients };
     obj[e]++;
-
     this.setState({ ingredients: obj });
-    console.log("ingredients", this.state.ingredients);
   };
   ortsHasah = (e) => {
-    const obj = { ...this.state.ingredients };
+    var obj = { ...this.state.ingredients };
 
-    if (obj[e] >= 1) {
+    if (this.state.ingredients[e] > 0) {
       obj[e]--;
 
       this.setState({ ingredients: obj });
     }
-    console.log("ingredients", this.state.ingredients);
   };
 
   render() {
