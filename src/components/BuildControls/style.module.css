@@ -1,0 +1,5 @@
+.BuildControls {
+  background-color: rgb(237, 204, 72);
+  text-align: center;
+  height: calc(100% - 600px);
+}

@@ -1,0 +1,13 @@
+.BuildControl {
+  display: flex;
+  width: 250px;
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+.Label {
+  width: 100px;
+  text-align: right;
+  font-weight: bold;
+}
