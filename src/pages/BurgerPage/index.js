@@ -3,7 +3,14 @@ import Burger from "../../components/Burger";
 import BuildControls from "../../components/BuildControls";
 import css from "./style.module.css";
 
-class BurgerBuilder extends Component {
+const INGREDIENTS_PRICE = {
+  bacon: 500,
+  salad: 100,
+  meat: 1000,
+  cheese: 300,
+};
+
+class BurgerPage extends Component {
   state = {
     ingredients: {
       bacon: 0,
@@ -11,12 +18,15 @@ class BurgerBuilder extends Component {
       meat: 0,
       cheese: 0,
     },
+    price: 0,
   };
 
   ortsNemeh = (e) => {
     var obj = { ...this.state.ingredients };
     obj[e]++;
     this.setState({ ingredients: obj });
+
+    this.setState({ price: this.state.price + INGREDIENTS_PRICE[e] });
   };
   ortsHasah = (e) => {
     var obj = { ...this.state.ingredients };
@@ -25,16 +35,18 @@ class BurgerBuilder extends Component {
       obj[e]--;
 
       this.setState({ ingredients: obj });
+
+      this.setState({ price: this.state.price - INGREDIENTS_PRICE[e] });
     }
   };
 
   render() {
     return (
-      <div className={css.BurgerBuilder}>
+      <div className={css.BurgerPage}>
         <Burger orts={this.state.ingredients} />
-        <BuildControls orts={this.state.ingredients} ortsNemeh={this.ortsNemeh} ortsHasah={this.ortsHasah} />
+        <BuildControls orts={this.state.ingredients} ortsNemeh={this.ortsNemeh} ortsHasah={this.ortsHasah} price={this.state.price} />
       </div>
     );
   }
 }
-export default BurgerBuilder;
+export default BurgerPage;

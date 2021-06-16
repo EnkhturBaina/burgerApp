@@ -3,3 +3,7 @@
   text-align: center;
   height: calc(100% - 600px);
 }
+.Price {
+  font-weight: bold;
+  padding-top: 10px;
+}
