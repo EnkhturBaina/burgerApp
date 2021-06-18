@@ -28,11 +28,13 @@ class BurgerPage extends Component {
 
     this.setState({ price: this.state.price + INGREDIENTS_PRICE[e] });
   };
+
   ortsHasah = (e) => {
     var obj = { ...this.state.ingredients };
 
     if (this.state.ingredients[e] > 0) {
       obj[e]--;
+      A;
 
       this.setState({ ingredients: obj });
 

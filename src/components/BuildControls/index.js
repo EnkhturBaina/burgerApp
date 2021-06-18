@@ -9,7 +9,6 @@ var controls = {
 };
 
 const BuildControls = (props) => {
-  console.log("BuildControls props", props);
   return (
     <div className={css.BuildControls}>
       <p className={css.Price}>Үнэ: {props.price}</p>
