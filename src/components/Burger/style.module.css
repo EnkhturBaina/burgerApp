@@ -1,13 +1,16 @@
 .Burger {
-  height: 600px;
-  border: 1px dotted red;
-  width: 40%;
-  margin: 10px auto;
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-.EmptyContent {
+  width: 100%;
+  height: 280px;
+  margin: auto;
   text-align: center;
+  overflow: scroll;
   font-weight: bold;
-  padding: 10px 0;
+  font-size: 24px;
+}
+
+@media (min-width: 800px) and (min-height: 400px) {
+  .Burger {
+    width: 700px;
+    height: 500px;
+  }
 }

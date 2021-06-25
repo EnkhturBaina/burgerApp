@@ -1,54 +1,112 @@
-import { Component } from "react";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import Burger from "../../components/Burger";
 import BuildControls from "../../components/BuildControls";
-import css from "./style.module.css";
+import Modal from "../../components/General/Modal";
+import OrderSummary from "../../components/OrderSummary";
+import Spinner from "../../components/General/Spinner";
+import * as actions from "../../redux/actions/burgerActions";
 
-const INGREDIENTS_PRICE = {
-  bacon: 500,
-  salad: 100,
-  meat: 1000,
-  cheese: 300,
+const INGREDIENT_PRICES = { salad: 150, cheese: 250, bacon: 800, meat: 1500 };
+const INGREDIENT_NAMES = {
+  bacon: "Гахайн мах",
+  cheese: "Бяслаг",
+  meat: "Үхрийн мах",
+  salad: "Салад",
 };
 
 class BurgerPage extends Component {
   state = {
-    ingredients: {
-      bacon: 0,
-      salad: 0,
-      meat: 0,
-      cheese: 0,
-    },
-    price: 0,
+    purchasing: false,
+    confirmOrder: false,
   };
 
-  ortsNemeh = (e) => {
-    var obj = { ...this.state.ingredients };
-    obj[e]++;
-    this.setState({ ingredients: obj });
+  componentDidMount = () => {};
 
-    this.setState({ price: this.state.price + INGREDIENTS_PRICE[e] });
+  continueOrder = () => {
+    const params = [];
+
+    for (let orts in this.props.burgeriinOrts) {
+      params.push(orts + "=" + this.props.burgeriinOrts[orts]);
+    }
+
+    params.push("dun=" + this.props.niitUne);
+
+    this.props.history.push({
+      pathname: "/ship",
+      search: params.join("&"),
+    });
+
+    this.closeConfirmModal();
   };
 
-  ortsHasah = (e) => {
-    var obj = { ...this.state.ingredients };
+  showConfirmModal = () => {
+    this.setState({ confirmOrder: true });
+  };
 
-    if (this.state.ingredients[e] > 0) {
-      obj[e]--;
-      A;
+  closeConfirmModal = () => {
+    this.setState({ confirmOrder: false });
+  };
 
-      this.setState({ ingredients: obj });
+  ortsNemeh = (type) => {
+    const newIngredients = { ...this.props.burgeriinOrts };
+    newIngredients[type]++;
+    const newPrice = this.props.niitUne + INGREDIENT_PRICES[type];
+    this.setState({
+      purchasing: true,
+      totalPrice: newPrice,
+      ingredients: newIngredients,
+    });
+  };
 
-      this.setState({ price: this.state.price - INGREDIENTS_PRICE[e] });
+  ortsHasah = (type) => {
+    if (this.props.burgeriinOrts[type] > 0) {
+      const newIngredients = { ...this.props.burgeriinOrts };
+      newIngredients[type]--;
+      const newPrice = this.props.niitUne - INGREDIENT_PRICES[type];
+      this.setState({
+        purchasing: newPrice > 1000,
+        totalPrice: newPrice,
+        ingredients: newIngredients,
+      });
     }
   };
 
   render() {
+    console.log("BurgerPage -----1", this.props);
+    const disabledIngredients = { ...this.props.burgeriinOrts };
+
+    for (let key in disabledIngredients) {
+      disabledIngredients[key] = disabledIngredients[key] <= 0;
+    }
+
+    console.log("BurgerPage -----2", this.props);
+
     return (
-      <div className={css.BurgerPage}>
-        <Burger orts={this.state.ingredients} />
-        <BuildControls orts={this.state.ingredients} ortsNemeh={this.ortsNemeh} ortsHasah={this.ortsHasah} price={this.state.price} />
+      <div>
+        <Modal closeConfirmModal={this.closeConfirmModal} show={this.state.confirmOrder}>
+          {this.state.loading ? <Spinner /> : <OrderSummary onCancel={this.closeConfirmModal} onContinue={this.continueOrder} price={this.props.niitUne} ingredientsNames={INGREDIENT_NAMES} ingredients={this.props.burgeriinOrts} />}
+        </Modal>
+
+        <Burger orts={this.props.burgeriinOrts} />
+        <BuildControls showConfirmModal={this.showConfirmModal} ingredientsNames={INGREDIENT_NAMES} disabled={!this.state.purchasing} price={this.props.niitUne} disabledIngredients={disabledIngredients} ortsHasah={this.props.burgereesOrtsHas} ortsNemeh={this.props.burgertOrtsNem} />
       </div>
     );
   }
 }
-export default BurgerPage;
+
+const mapStateToProps = (state) => {
+  return {
+    burgeriinOrts: state.ingredients,
+    niitUne: state.totalPrice,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    burgertOrtsNem: (ortsNer) => dispatch(actions.addIngredient(ortsNer)),
+    burgereesOrtsHas: (ortsNer) => dispatch(actions.removeIngredient(ortsNer)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BurgerPage);
